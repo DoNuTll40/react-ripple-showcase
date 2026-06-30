@@ -27,11 +27,11 @@ export interface DemoCardProps {
 
 // ⚡ Optimization: เอาตัวแปร tabs ออกมาไว้นอก Component 
 // เพื่อไม่ให้มันถูกสร้างใหม่ (Allocate Memory) ทุกครั้งที่ปุ่มโดนคลิกหรือรีเรนเดอร์
-const TABS: { id: keyof CodeSnippets; name: string }[] = [
-  { id: "react", name: "React" },
-  { id: "vue", name: "Vue 3" },
-  { id: "svelte", name: "Svelte" },
-  { id: "html", name: "Vanilla JS" },
+const TABS: { id: keyof CodeSnippets; name: string; syntax: string }[] = [
+  { id: "react", name: "React", syntax: "jsx" }, // หรือใช้ "tsx" ถ้าโค้ดเป็น TypeScript
+  { id: "vue", name: "Vue 3", syntax: "html" }, // Vue มี <template> และ <script> ใช้ "html" จะเป๊ะสุด
+  { id: "svelte", name: "Svelte", syntax: "html" }, // Svelte โครงสร้างเหมือน HTML เช่นกัน
+  { id: "html", name: "Vanilla JS", syntax: "javascript" }, // ถ้าโค้ดเป็น JS เพียวๆ ใช้ "javascript" (แต่ถ้าโค้ดมี HTML ด้วยก็ใช้ "html")
 ];
 
 // 📌 Component หลักสำหรับการ์ดแสดงตัวอย่าง (โชว์ปุ่ม + โชว์โค้ด)
@@ -49,6 +49,8 @@ export const DemoCard = ({
   const [isOpen, setIsOpen] = useState(false);
   // State สำหรับเก็บว่าตอนนี้กำลังดูโค้ดของ Framework อะไรอยู่
   const [activeTab, setActiveTab] = useState<keyof CodeSnippets>("react");
+
+  console.log(TABS.find(tab => tab.id === activeTab)?.id)
 
   return (
     <motion.div
@@ -139,7 +141,7 @@ export const DemoCard = ({
                     </div>
                     <SyntaxHighlighter
                       style={isDark ? (vscDarkPlus as any) : (vs as any)}
-                      language={activeTab === "html" ? "html" : "jsx"}
+                      language={TABS.find(tab => tab.id === activeTab)?.syntax || "javascript"} // เปลี่ยนมาใช้ .syntax
                       customStyle={{
                         margin: 0,
                         padding: "1.25rem",

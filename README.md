@@ -10,11 +10,7 @@ A beautiful, interactive showcase and documentation website for the [`@nuttawoot
 ![NPM Version](https://img.shields.io/npm/v/@nuttawoot_donut/react-ripple?style=for-the-badge&logo=npm)
 ![License](https://img.shields.io/github/license/DoNuTll40/react-ripple-showcase?style=for-the-badge)
 
-**👀 Live Demo:** [https://YOUR-VERCEL-URL.vercel.app](https://YOUR-VERCEL-URL.vercel.app)
-
----
-
-![Ripple Animation Preview](https://via.placeholder.com/800x400?text=Insert+Your+GIF+or+Screenshot+Here)
+**👀 Live Demo:** [https://react-ripple-showcase.vercel.app](https://react-ripple-showcase.vercel.app)
 
 ---
 

@@ -1,220 +1,24 @@
-import React, { useRef, useState, useEffect, useMemo } from "react";
-import Ripple from "@nuttawoot_donut/react-ripple";
-import {
-  Sun,
-  Moon,
-  Package,
-  Code2,
-  ChevronDown,
-  Copy,
-  Check,
-} from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import {
-  vscDarkPlus,
-  vs,
-} from "react-syntax-highlighter/dist/esm/styles/prism";
+import { useState, useEffect, useMemo } from "react";
+import { Sun, Moon, Package, Check } from "lucide-react";
+import { translations } from "./locales/translations";
+import { generateId } from "./utils/stringUtils";
+import { useRipple } from "./hooks/useRipple";
+import { useScrollSpy } from "./hooks/useScrollSpy";
+import { GithubSVG } from "./components/icons/GithubSVG";
+import { CopyButton } from "./components/ui/CopyButton";
+import { DemoCard } from "./components/DemoCard";
+import { MarkdownRenderer } from "./components/MarkdownRenderer";
 
-// 📌 ฟังก์ชันอ่านตัวหนังสือจาก Markdown (ใส่ Type เป็น any ไปก่อนสำหรับ node)
-const extractTextFromNode = (node: any): string => {
-  if (!node) return "";
-  if (node.type === "text") return node.value || "";
-  if (node.children) return node.children.map(extractTextFromNode).join("");
-  return "";
-};
-
-// 📌 ฟังก์ชันสร้าง ID สำหรับหัวข้อ
-const generateId = (text: string): string => {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w\-\u0E00-\u0E7F]/g, "")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-};
-
-// 📌 ไอคอน GitHub
-const GithubSVG = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-    <path d="M9 18c-4.51 2-5-2-7-2" />
-  </svg>
-);
-
-// 📌 Type สำหรับ CopyButton
-interface CopyButtonProps {
-  text: string;
-  onCopy?: () => void;
-  ripple: any;
-}
-
-const CopyButton = ({ text, onCopy, ripple }: CopyButtonProps) => {
-  const [copied, setCopied] = useState(false);
-  const handleCopy = () => {
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    if (onCopy) onCopy();
-    setTimeout(() => setCopied(false), 2000);
-  };
-  return (
-    <button
-      onPointerDown={(e) => ripple.create(e)}
-      onClick={handleCopy}
-      className="relative overflow-hidden p-2 rounded-xl hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors focus:outline-none bg-white dark:bg-neutral-800 shadow-sm border border-neutral-200 dark:border-neutral-700 cursor-pointer"
-      title="Copy to clipboard"
-    >
-      {copied ? (
-        <Check size={14} className="text-emerald-500" />
-      ) : (
-        <Copy size={14} className="text-neutral-500 dark:text-neutral-400" />
-      )}
-    </button>
-  );
-};
-
-// 📌 Type สำหรับโค้ดในแต่ละ Framework
-interface CodeSnippets {
-  react: string;
-  vue: string;
-  svelte: string;
-  html: string;
-}
-
-// 📌 Type สำหรับ DemoCard
-interface DemoCardProps {
-  title: string;
-  description: string;
-  codeSnippets: CodeSnippets;
-  isDark: boolean;
-  onCopy?: () => void;
-  ripple: any;
-  lang: string;
-  children: React.ReactNode;
-}
-
-const DemoCard = ({
-  title,
-  description,
-  codeSnippets,
-  isDark,
-  onCopy,
-  ripple,
-  lang,
-  children,
-}: DemoCardProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<keyof CodeSnippets>("react");
-
-  const tabs: { id: keyof CodeSnippets; name: string }[] = [
-    { id: "react", name: "React" },
-    { id: "vue", name: "Vue 3" },
-    { id: "svelte", name: "Svelte" },
-    { id: "html", name: "Vanilla JS" },
-  ];
-
-  return (
-    <div className="group flex flex-col p-5 md:p-8 bg-white dark:bg-[#111113] rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-sm transition-all hover:shadow-lg">
-      <div className="mb-6 md:mb-10">
-        <h2 className="text-lg md:text-xl font-bold mb-2 tracking-tight">
-          {title}
-        </h2>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
-          {description}
-        </p>
-      </div>
-
-      <div className="mt-auto space-y-4">
-        {children}
-
-        <div className="pt-3 border-t border-neutral-100 dark:border-neutral-800/50">
-          <button
-            onPointerDown={(e) => ripple.create(e)}
-            onClick={() => setIsOpen(!isOpen)}
-            className="relative overflow-hidden flex items-center justify-between w-full p-2 -mx-2 rounded-lg text-xs font-medium text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800/50 transition-colors focus:outline-none cursor-pointer"
-          >
-            <span className="flex items-center gap-1.5">
-              <Code2 size={14} />{" "}
-              {lang === "th" ? "ดูโค้ดตัวอย่าง" : "View Source Code"}
-            </span>
-            <ChevronDown
-              size={14}
-              className={`transition-transform duration-300 ${
-                isOpen ? "rotate-180" : ""
-              }`}
-            />
-          </button>
-
-          <div
-            className={`grid transition-all duration-300 ease-in-out ${
-              isOpen ? "grid-rows-[1fr] mt-2" : "grid-rows-[0fr]"
-            }`}
-          >
-            <div className="overflow-hidden relative flex flex-col">
-              {/* 🔄 แท็บสลับภาษา */}
-              <div className="flex border-b border-neutral-200 dark:border-neutral-800 mb-2 gap-1 text-[11px] font-medium pt-2">
-                {tabs.map((tab) => (
-                  <button
-                    key={tab.id}
-                    onPointerDown={(e) => ripple.create(e)}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`relative overflow-hidden px-3 py-1.5 rounded-t-lg transition-colors focus:outline-none cursor-pointer ${
-                      activeTab === tab.id
-                        ? "bg-neutral-100 dark:bg-neutral-800 text-indigo-600 dark:text-indigo-400 font-bold border-b-2 border-indigo-500"
-                        : "text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
-                    }`}
-                  >
-                    {tab.name}
-                  </button>
-                ))}
-              </div>
-
-              <div className="relative">
-                <div className="absolute right-2 top-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <CopyButton
-                    text={codeSnippets[activeTab]}
-                    onCopy={onCopy}
-                    ripple={ripple}
-                  />
-                </div>
-                <SyntaxHighlighter
-                  style={isDark ? (vscDarkPlus as any) : (vs as any)}
-                  language={activeTab === "html" ? "html" : "jsx"}
-                  customStyle={{
-                    margin: 0,
-                    padding: "1.25rem",
-                    borderRadius: "1rem",
-                    fontSize: "0.875rem",
-                    lineHeight: "1.5",
-                  }}
-                  className="border border-neutral-200 dark:border-neutral-800 shadow-inner"
-                >
-                  {codeSnippets[activeTab]}
-                </SyntaxHighlighter>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function App() {
-  const ripple = useRef(new Ripple()).current;
+  // 📌 1. ดึง custom hook ของ Ripple มาใช้งาน
+  const ripple = useRipple();
+
+  // 📌 2. สร้าง State เพื่อเลือกว่าจะแสดงหน้า Showcase หรือ Docs
   const [activeView, setActiveView] = useState<"showcase" | "docs">("showcase");
 
+  // 📌 3. State สำหรับ Dark Mode (เช็คค่าเริ่มต้นจากระบบของผู้ใช้)
   const [isDark, setIsDark] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
       return (
@@ -225,170 +29,95 @@ export default function App() {
     return false;
   });
 
+  // 📌 4. State สำหรับเปลี่ยนภาษา (อังกฤษ / ไทย)
   const [lang, setLang] = useState<"en" | "th">("en");
-
-  const translations: Record<string, any> = {
-    en: {
-      heroDesc: (
-        <>
-          A lightweight, intelligent material ripple effect.{" "}
-          <br className="hidden sm:block" />
-          Automatically adapts to your theme with full color customization.
-        </>
-      ),
-      copiedNpm: "Copied NPM install command!",
-      autoTheme: "Auto Theme",
-      autoThemeDesc:
-        "Ripple color is automatically determined by the parent container's theme context.",
-      autoThemeBtn: "Click to Ripple",
-      forcedLight: "Forced Light",
-      forcedLightDesc:
-        "Ignores the current theme and forces a dark transparent ripple designed for light backgrounds.",
-      forcedLightBtn: "Light Ripple",
-      forcedDark: "Forced Dark",
-      forcedDarkDesc:
-        "Ignores the current theme and forces a white transparent ripple designed for dark backgrounds.",
-      forcedDarkBtn: "Dark Ripple",
-      customColor: "Custom Configuration",
-      customColorDesc:
-        "Pass a custom color (HEX/RGB) and adjust alpha channels to match your brand's identity.",
-      customColorBtn: "Custom Color",
-      webVersion: "Website Version",
-      onThisPage: "On this page",
-    },
-    th: {
-      heroDesc: (
-        <>
-          เอฟเฟกต์ Ripple สไตล์ Material Design ที่เบาและฉลาด{" "}
-          <br className="hidden sm:block" />
-          ปรับสีอัตโนมัติตามธีมของคุณ พร้อมตั้งค่าสีเองได้อย่างอิสระ
-        </>
-      ),
-      copiedNpm: "คัดลอกคำสั่งติดตั้ง NPM แล้ว!",
-      autoTheme: "ธีมอัตโนมัติ (Auto Theme)",
-      autoThemeDesc:
-        "สีของ Ripple จะถูกกำหนดอัตโนมัติ ขึ้นอยู่กับสีพื้นหลังและธีมของคอนเทนเนอร์ที่ครอบอยู่",
-      autoThemeBtn: "คลิกเพื่อดูเอฟเฟกต์",
-      forcedLight: "บังคับโหมดสว่าง (Forced Light)",
-      forcedLightDesc:
-        "เพิกเฉยต่อธีมปัจจุบัน และบังคับใช้ Ripple โปร่งแสงสีดำ สำหรับนำไปใช้กับปุ่มพื้นหลังสีสว่าง",
-      forcedLightBtn: "โหมดสว่าง",
-      forcedDark: "บังคับโหมดมืด (Forced Dark)",
-      forcedDarkDesc:
-        "เพิกเฉยต่อธีมปัจจุบัน และบังคับใช้ Ripple โปร่งแสงสีขาว สำหรับนำไปใช้กับปุ่มพื้นหลังสีมืด",
-      forcedDarkBtn: "โหมดมืด",
-      customColor: "ตั้งค่าสีเอง (Custom Color)",
-      customColorDesc:
-        "กำหนดสีที่คุณต้องการเอง (HEX/RGB) และปรับค่าความโปร่งใสให้เข้ากับเอกลักษณ์ของแบรนด์คุณ",
-      customColorBtn: "สีแบบกำหนดเอง",
-      webVersion: "เวอร์ชันหน้าเว็บ",
-      onThisPage: "หัวข้อในหน้านี้",
-    },
-  };
+  // ดึงข้อความแปลภาษามาเก็บไว้ในตัวแปร t ให้เรียกใช้ง่ายๆ (เช่น t.heroDesc)
   const t = translations[lang];
 
+  // 📌 5. State สำหรับข้อความแจ้งเตือน (Toast) เมื่อก๊อปปี้โค้ดเสร็จ
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const showToast = (msg: string) => {
     setToastMessage(msg);
-    setTimeout(() => setToastMessage(null), 3000);
+    setTimeout(() => setToastMessage(null), 3000); // ให้ข้อความหายไปหลัง 3 วินาที
   };
 
+  // 📌 6. ดึงเวอร์ชันล่าสุดของแพ็กเกจจาก NPM มาแสดง
   const [version, setVersion] = useState("v2.0.x");
+
+  // useEffect ตัวนี้จะทำงานแค่ 1 ครั้งตอนโหลดหน้าเว็บ (สังเกตจาก [] ด้านท้าย)
   useEffect(() => {
-    fetch(
-      "https://data.jsdelivr.com/v1/package/npm/@nuttawoot_donut/react-ripple"
-    )
+    const abortController = new AbortController();
+    fetch("https://data.jsdelivr.com/v1/package/npm/@nuttawoot_donut/react-ripple", {
+      signal: abortController.signal
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data?.tags?.latest) setVersion(`v${data.tags.latest}`);
       })
-      .catch(() => {});
+      .catch((err) => {
+        if (err.name !== 'AbortError') console.error("Failed to fetch version");
+      });
+    return () => abortController.abort(); // ยกเลิกการโหลด หากปิดหน้าเว็บไปก่อน
   }, []);
 
+  // 📌 7. ดึงข้อมูลคู่มือการใช้งาน (README.md) จาก Github Repository
   const [readme, setReadme] = useState("");
+  const [isLoadingReadme, setIsLoadingReadme] = useState(true); // ใช้สำหรับแสดง Loading...
+
   useEffect(() => {
-    fetch(
-      "https://raw.githubusercontent.com/DoNuTll40/ripple-effects-auto-darklight/main/README.md"
-    )
+    const abortController = new AbortController();
+    fetch("https://raw.githubusercontent.com/DoNuTll40/ripple-effects-auto-darklight/main/README.md", {
+      signal: abortController.signal
+    })
       .then((res) => res.text())
-      .then((text) => setReadme(text))
-      .catch(() => setReadme("Failed to load documentation."));
+      .then((text) => {
+        setReadme(text);
+        setIsLoadingReadme(false);
+      })
+      .catch((err) => {
+        if (err.name !== 'AbortError') {
+          setReadme("Failed to load documentation.");
+          setIsLoadingReadme(false);
+        }
+      });
+    return () => abortController.abort();
   }, []);
 
+  // 📌 8. สกัดเอาหัวข้อ (Header) จากไฟล์ README.md มาทำเมนูด้านข้าง
+  // ⚡ Optimization: เปลี่ยนจากการใช้ .split() และ .map() ซ้อนกันที่กินเมมโมรี่ (Big O หนักตรงสร้าง Array ใหม่เพียบ)
+  // มาใช้ Regex .matchAll() แทน ทำให้หาหัวข้อเจอในรอบเดียว ประหยัดเวลา (O(N) แบบตัวคูณน้อยลงมาก) และกิน RAM น้อยลง
   const docSections = useMemo(() => {
     if (!readme) return [];
-    const parts = ("\n" + readme).split(/\n(?=## )/).filter((p) => p.trim());
-    return parts.map((part) => {
-      const lines = part.split("\n");
-      const headerLine = lines.find((l) => l.startsWith("## "));
-      let title = "Introduction";
-      let id = "introduction";
 
-      if (headerLine) {
-        title = headerLine.replace("## ", "").replace(/\*/g, "").trim();
-        id = generateId(title);
-      }
-      return { id, title };
+    // ค้นหาบรรทัดที่ขึ้นต้นด้วย "## " ตามด้วยข้อความอะไรก็ได้
+    const matches = Array.from(readme.matchAll(/^##\s+(.+)$/gm));
+
+    return matches.map((match) => {
+      const title = match[1].replace(/\*/g, "").trim();
+      return {
+        id: generateId(title),
+        title: title,
+      };
     });
   }, [readme]);
 
-  const [activeSectionId, setActiveSectionId] = useState("introduction");
-  const currentSectionRef = useRef("introduction");
+  // 📌 9. Custom Hook สำหรับบอกว่าตอนนี้เรา "เลื่อนหน้าจอ" ไปอ่านถึงหัวข้อไหนแล้ว (จะได้ไฮไลท์เมนูด้านซ้าย)
+  const activeSectionId = useScrollSpy(docSections, activeView);
 
-  useEffect(() => {
-    if (activeView !== "docs" || docSections.length === 0) return;
-
-    const handleScroll = () => {
-      const elements = docSections
-        .map((sec) => ({
-          id: sec.id,
-          el: document.getElementById(sec.id),
-        }))
-        .filter(
-          (item): item is { id: string; el: HTMLElement } => item.el !== null
-        );
-
-      if (elements.length === 0) return;
-
-      let newActiveId = elements[0].id;
-
-      for (const item of elements) {
-        const rect = item.el.getBoundingClientRect();
-        if (rect.top <= 150) {
-          newActiveId = item.id;
-        }
-      }
-
-      if (currentSectionRef.current !== newActiveId) {
-        currentSectionRef.current = newActiveId;
-        setActiveSectionId(newActiveId);
-        window.history.replaceState(null, "", "#" + newActiveId);
-      }
-    };
-
-    const timeout = setTimeout(() => {
-      handleScroll();
-      window.addEventListener("scroll", handleScroll, { passive: true });
-    }, 300);
-
-    return () => {
-      clearTimeout(timeout);
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [activeView, docSections]);
-
+  // 📌 10. ฟังก์ชันเลื่อนหน้าจอไปยังหัวข้อที่ผู้ใช้คลิก
   const scrollToSection = (id: string) => {
     window.history.pushState(null, "", "#" + id);
     if (id === "introduction") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" }); // เลื่อนไปบนสุด
       return;
     }
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      element.scrollIntoView({ behavior: "smooth" }); // ค่อยๆ ไถลลงไป (smooth scroll)
     }
   };
 
+  // 📌 11. อัปเดตคลาสของ <html> ให้เป็น Dark หรือ Light ตามที่ผู้ใช้เลือก
   useEffect(() => {
     const root = document.documentElement;
     if (isDark) {
@@ -396,21 +125,26 @@ export default function App() {
     } else {
       root.classList.remove("dark");
     }
-  }, [isDark]);
+  }, [isDark]); // useEffect นี้ทำงานทุกครั้งที่ isDark เปลี่ยนไป
 
   return (
     <div className="min-h-screen transition-colors duration-500 bg-[#fafafa] dark:bg-[#09090b] text-neutral-900 dark:text-neutral-50 selection:bg-indigo-500/30 relative flex flex-col">
-      {toastMessage && (
-        <div className="fixed bottom-10 left-1/2 transform -translate-x-1/2 z-50 animate-bounce">
-          <div className="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-6 py-3 rounded-full shadow-2xl font-medium text-sm flex items-center gap-2">
-            <Check
-              size={16}
-              className="text-emerald-400 dark:text-emerald-600"
-            />
-            {toastMessage}
-          </div>
-        </div>
-      )}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: 20, x: "-50%" }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="fixed bottom-10 left-1/2 z-50"
+          >
+            <div className="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-6 py-3 rounded-full shadow-2xl font-medium text-sm flex items-center gap-2">
+              <Check size={16} className="text-emerald-400 dark:text-emerald-600" />
+              {toastMessage}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <nav className="sticky top-0 z-40 w-full backdrop-blur-xl bg-white/80 dark:bg-[#09090b]/80 border-b border-neutral-200 dark:border-neutral-800">
         <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
@@ -429,11 +163,10 @@ export default function App() {
                 window.history.pushState(null, "", window.location.pathname);
                 window.scrollTo(0, 0);
               }}
-              className={`relative overflow-hidden px-4 sm:px-6 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all focus:outline-none cursor-pointer ${
-                activeView === "showcase"
+              className={`relative overflow-hidden px-4 sm:px-6 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all focus:outline-none cursor-pointer ${activeView === "showcase"
                   ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm"
                   : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
-              }`}
+                }`}
             >
               Showcase
             </button>
@@ -444,11 +177,10 @@ export default function App() {
                 window.history.pushState(null, "", "#introduction");
                 window.scrollTo(0, 0);
               }}
-              className={`relative overflow-hidden px-4 sm:px-6 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all focus:outline-none cursor-pointer ${
-                activeView === "docs"
+              className={`relative overflow-hidden px-4 sm:px-6 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all focus:outline-none cursor-pointer ${activeView === "docs"
                   ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm"
                   : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
-              }`}
+                }`}
             >
               Docs
             </button>
@@ -529,7 +261,7 @@ export default function App() {
               </div>
             </header>
 
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 pb-8">
+            <section className="grid grid-cols-1 md:grid-cols-2 items-start gap-4 md:gap-6 pb-8">
               <DemoCard
                 title={t.autoTheme}
                 description={t.autoThemeDesc}
@@ -632,11 +364,10 @@ export default function App() {
                       key={idx}
                       onPointerDown={(e) => ripple.create(e as any)}
                       onClick={() => scrollToSection(sec.id)}
-                      className={`relative overflow-hidden text-left px-4 py-2.5 text-sm transition-all focus:outline-none cursor-pointer border-l-2 -ml-[1px] ${
-                        isActive
+                      className={`relative overflow-hidden text-left px-4 py-2.5 text-sm transition-all focus:outline-none cursor-pointer border-l-2 -ml-[1px] ${isActive
                           ? "border-indigo-500 text-indigo-600 dark:text-indigo-400 font-semibold bg-indigo-50/50 dark:bg-indigo-500/10"
                           : "border-transparent text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-900/50"
-                      }`}
+                        }`}
                     >
                       {sec.title}
                     </button>
@@ -646,115 +377,23 @@ export default function App() {
             </aside>
 
             <div className="flex-1 min-w-0 bg-transparent md:bg-white md:dark:bg-[#111113] md:border border-neutral-200 dark:border-neutral-800 md:rounded-3xl md:p-12 md:shadow-sm min-h-[500px]">
-              {readme ? (
-                <ReactMarkdown
-                  components={{
-                    // 📌 ใส่ Type เป็น any ให้ Component ทั้งหมดเพื่อป้องกัน Error
-                    h1: ({ node, children, ...props }: any) => {
-                      const text = extractTextFromNode(node);
-                      return (
-                        <h1
-                          id="introduction"
-                          title={text}
-                          className="text-3xl md:text-4xl font-extrabold mb-8 line-clamp-1 scroll-mt-24"
-                          {...props}
-                        >
-                          {children}
-                        </h1>
-                      );
-                    },
-                    h2: ({ node, children, ...props }: any) => {
-                      const text = extractTextFromNode(node);
-                      const id = generateId(text);
-
-                      return (
-                        <h2
-                          id={id}
-                          className="scroll-mt-24 text-2xl font-bold mt-16 md:mt-20 mb-6 border-b border-neutral-200 dark:border-neutral-800 pb-3"
-                          {...props}
-                        >
-                          {children}
-                        </h2>
-                      );
-                    },
-                    h3: (props: any) => (
-                      <h3
-                        className="text-xl font-semibold mt-10 mb-3"
-                        {...props}
-                      />
-                    ),
-                    p: (props: any) => (
-                      <p
-                        className="mb-5 text-neutral-600 dark:text-neutral-400 leading-relaxed text-base"
-                        {...props}
-                      />
-                    ),
-                    a: (props: any) => (
-                      <a
-                        className="text-indigo-500 hover:underline font-medium"
-                        target="_blank"
-                        {...props}
-                      />
-                    ),
-                    ul: (props: any) => (
-                      <ul
-                        className="list-disc pl-6 mb-6 text-neutral-600 dark:text-neutral-400 space-y-2 text-base"
-                        {...props}
-                      />
-                    ),
-                    li: (props: any) => <li {...props} />,
-                    blockquote: (props: any) => (
-                      <blockquote
-                        className="border-l-4 border-indigo-500 pl-5 my-6 italic text-neutral-500 bg-indigo-50/50 dark:bg-indigo-950/20 py-3 rounded-r-xl text-base"
-                        {...props}
-                      />
-                    ),
-                    code: (props: any) => {
-                      const { node, inline, className, children, ...rest } =
-                        props;
-                      const match = /language-(\w+)/.exec(className || "");
-
-                      return !inline && match ? (
-                        <div className="relative group my-8">
-                          <div className="absolute right-3 top-3 z-10 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                            <CopyButton
-                              text={String(children).replace(/\n$/, "")}
-                              onCopy={() => showToast("Copied code from docs!")}
-                              ripple={ripple}
-                            />
-                          </div>
-                          <SyntaxHighlighter
-                            style={isDark ? (vscDarkPlus as any) : (vs as any)}
-                            language={match[1]}
-                            PreTag="div"
-                            customStyle={{
-                              margin: 0,
-                              padding: "1.5rem",
-                              borderRadius: "1rem",
-                              fontSize: "0.875rem",
-                            }}
-                            className="border border-neutral-200 dark:border-neutral-800 shadow-sm"
-                            {...rest}
-                          >
-                            {String(children).replace(/\n$/, "")}
-                          </SyntaxHighlighter>
-                        </div>
-                      ) : (
-                        <code
-                          className="bg-neutral-100 dark:bg-neutral-800 px-1.5 py-0.5 rounded-md text-sm font-mono text-pink-500 dark:text-pink-400"
-                          {...rest}
-                        >
-                          {children}
-                        </code>
-                      );
-                    },
-                  }}
-                >
-                  {readme}
-                </ReactMarkdown>
-              ) : (
+              {isLoadingReadme ? (
                 <div className="flex items-center justify-center h-full text-neutral-400">
-                  Loading documentation...
+                  <div className="animate-pulse flex flex-col items-center gap-4">
+                    <div className="h-6 w-32 bg-neutral-200 dark:bg-neutral-800 rounded"></div>
+                    <div className="h-4 w-48 bg-neutral-100 dark:bg-neutral-900 rounded"></div>
+                  </div>
+                </div>
+              ) : readme && readme !== "Failed to load documentation." ? (
+                <MarkdownRenderer
+                  content={readme}
+                  isDark={isDark}
+                  ripple={ripple}
+                  showToast={showToast}
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full text-red-400">
+                  {readme}
                 </div>
               )}
             </div>
@@ -813,7 +452,7 @@ export default function App() {
             <p className="hidden md:block text-neutral-300 dark:text-neutral-700">
               •
             </p>
-            <p>{t.webVersion}: 2.8.0</p>
+            <p>{t.webVersion}: 2.9.5</p>
           </div>
         </div>
       </footer>

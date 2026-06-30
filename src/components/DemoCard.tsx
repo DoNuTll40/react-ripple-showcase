@@ -118,7 +118,7 @@ export const DemoCard = ({
                         key={tab.id}
                         onPointerDown={(e) => ripple.create(e)}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`relative outline-none overflow-hidden py-2.5 px-3 text-[11px] md:text-xs font-semibold tracking-wide transition-all focus:outline-none cursor-pointer border-b-2 ${activeTab === tab.id
+                        className={`relative outline-none active:outline-none overflow-hidden py-2.5 px-3 text-[11px] md:text-xs font-semibold tracking-wide transition-all focus:outline-none cursor-pointer border-b-2 ${activeTab === tab.id
                           ? "text-indigo-600 dark:text-indigo-400 border-indigo-500 -mb-[1px]"
                           : "text-neutral-500 border-transparent hover:text-neutral-800 dark:hover:text-neutral-200 hover:bg-neutral-200/50 dark:hover:bg-neutral-800/50"
                           }`}
@@ -145,7 +145,7 @@ export const DemoCard = ({
                         padding: "1.25rem",
                         fontSize: "0.875rem",
                         lineHeight: "1.5",
-                        background: "transparent",
+                        backgroundColor: "transparent",
                       }}
                     >
                       {codeSnippets[activeTab]}

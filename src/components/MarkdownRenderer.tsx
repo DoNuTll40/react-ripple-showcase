@@ -111,7 +111,7 @@ export const MarkdownRenderer = ({
                     padding: "1.25rem",
                     fontSize: "0.875rem",
                     lineHeight: "1.5",
-                    background: "transparent",
+                    backgroundColor: "transparent",
                   }}
                   {...rest}
                 >

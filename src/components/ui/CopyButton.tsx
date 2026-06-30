@@ -10,7 +10,7 @@ export interface CopyButtonProps {
 
 export const CopyButton = ({ text, onCopy, ripple }: CopyButtonProps) => {
   const [copied, setCopied] = useState(false);
-  
+
   const handleCopy = () => {
     navigator.clipboard.writeText(text);
     setCopied(true);

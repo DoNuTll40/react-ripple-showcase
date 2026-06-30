@@ -12,13 +12,10 @@ import { MarkdownRenderer } from "./components/MarkdownRenderer";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function App() {
-  // 📌 1. ดึง custom hook ของ Ripple มาใช้งาน
-  const ripple = useRipple();
-
-  // 📌 2. สร้าง State เพื่อเลือกว่าจะแสดงหน้า Showcase หรือ Docs
+  // 📌 1. สร้าง State เพื่อเลือกว่าจะแสดงหน้า Showcase หรือ Docs
   const [activeView, setActiveView] = useState<"showcase" | "docs">("showcase");
 
-  // 📌 3. State สำหรับ Dark Mode (เช็คค่าเริ่มต้นจากระบบของผู้ใช้)
+  // 📌 2. State สำหรับ Dark Mode (เช็คค่าเริ่มต้นจากระบบของผู้ใช้)
   const [isDark, setIsDark] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
       return (
@@ -28,6 +25,11 @@ export default function App() {
     }
     return false;
   });
+
+  // 📌 3. ดึง custom hook ของ Ripple มาใช้งาน โดยส่ง isDark ไปด้วย
+  const ripple = useRipple(isDark);
+
+
 
   // 📌 4. State สำหรับเปลี่ยนภาษา (อังกฤษ / ไทย)
   const [lang, setLang] = useState<"en" | "th">("en");
@@ -132,21 +134,30 @@ export default function App() {
       <AnimatePresence>
         {toastMessage && (
           <motion.div
-            initial={{ opacity: 0, y: 50, x: "-50%" }}
-            animate={{ opacity: 1, y: 0, x: "-50%" }}
-            exit={{ opacity: 0, y: 20, x: "-50%" }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="fixed bottom-10 left-1/2 z-50"
+            initial={{ opacity: 0, y: 50, x: "-50%", scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
+            exit={{ opacity: 0, y: 20, x: "-50%", scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 25 }}
+            className="fixed bottom-10 left-1/2 z-50 pointer-events-none"
           >
-            <div className="bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-6 py-3 rounded-full shadow-2xl font-medium text-sm flex items-center gap-2">
-              <Check size={16} className="text-emerald-400 dark:text-emerald-600" />
-              {toastMessage}
+            <div className="flex items-center gap-3 px-5 py-3 rounded-full backdrop-blur-xl bg-white/80 dark:bg-neutral-900/80 border border-neutral-200/50 dark:border-neutral-800/50 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)]">
+              <motion.div
+                initial={{ scale: 0, rotate: -45 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
+                className="flex items-center justify-center min-w-6 min-h-6 rounded-full bg-emerald-100 dark:bg-emerald-500/20"
+              >
+                <Check size={14} strokeWidth={3} className="text-emerald-600 dark:text-emerald-400" />
+              </motion.div>
+              <span className="font-semibold text-sm tracking-wide text-neutral-800 dark:text-neutral-200">
+                {toastMessage}
+              </span>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <nav className="sticky top-0 z-40 w-full backdrop-blur-xl bg-white/80 dark:bg-[#09090b]/80 border-b border-neutral-200 dark:border-neutral-800">
+      <nav className="sticky top-0 z-40 w-full backdrop-blur-3xl bg-white/80 dark:bg-[#09090b]/80 border-b border-neutral-200 dark:border-neutral-800">
         <div className="max-w-6xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
           <div className="font-bold text-lg tracking-tight flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs">
@@ -163,9 +174,9 @@ export default function App() {
                 window.history.pushState(null, "", window.location.pathname);
                 window.scrollTo(0, 0);
               }}
-              className={`relative overflow-hidden px-4 sm:px-6 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all focus:outline-none cursor-pointer ${activeView === "showcase"
-                  ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm"
-                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+              className={`relative outline-none overflow-hidden px-4 sm:px-6 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all focus:outline-none cursor-pointer ${activeView === "showcase"
+                ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm"
+                : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
                 }`}
             >
               Showcase
@@ -177,9 +188,9 @@ export default function App() {
                 window.history.pushState(null, "", "#introduction");
                 window.scrollTo(0, 0);
               }}
-              className={`relative overflow-hidden px-4 sm:px-6 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all focus:outline-none cursor-pointer ${activeView === "docs"
-                  ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm"
-                  : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
+              className={`relative outline-none overflow-hidden px-4 sm:px-6 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all focus:outline-none cursor-pointer ${activeView === "docs"
+                ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white shadow-sm"
+                : "text-neutral-500 hover:text-neutral-900 dark:hover:text-white"
                 }`}
             >
               Docs
@@ -245,7 +256,8 @@ export default function App() {
                   target="_blank"
                   rel="noreferrer"
                   onPointerDown={(e) => ripple.create(e as any)}
-                  className="relative overflow-hidden flex items-center gap-2 px-5 py-2.5 md:px-6 md:py-3 rounded-full border border-transparent bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 shadow-sm hover:scale-105 transition-all text-xs md:text-sm font-semibold focus:outline-none cursor-pointer"
+                  draggable={false}
+                  className="relative outline-none overflow-hidden flex items-center gap-2 px-5 py-2.5 md:px-6 md:py-3 rounded-full border bg-white dark:border-none border-neutral-300 dark:bg-neutral-900 dark:text-white text-neutral-900 shadow-sm transition-all text-xs md:text-sm font-semibold focus:outline-none cursor-pointer"
                 >
                   <GithubSVG /> GitHub
                 </a>
@@ -254,7 +266,8 @@ export default function App() {
                   target="_blank"
                   rel="noreferrer"
                   onPointerDown={(e) => ripple.create(e as any, "light")}
-                  className="relative overflow-hidden flex items-center gap-2 px-5 py-2.5 md:px-6 md:py-3 rounded-full border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 shadow-sm hover:bg-red-100 dark:hover:bg-red-900/40 transition-all text-xs md:text-sm font-semibold focus:outline-none cursor-pointer"
+                  draggable={false}
+                  className="relative outline-none overflow-hidden flex items-center gap-2 px-5 py-2.5 md:px-6 md:py-3 rounded-full border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400 shadow-sm hover:bg-red-100 dark:hover:bg-red-900/40 transition-all text-xs md:text-sm font-semibold focus:outline-none cursor-pointer"
                 >
                   <Package size={16} /> NPM
                 </a>
@@ -278,7 +291,7 @@ export default function App() {
               >
                 <button
                   onPointerDown={(e) => ripple.create(e as any)}
-                  className="w-full relative overflow-hidden px-5 py-3.5 md:px-6 md:py-4 bg-indigo-600 text-white font-semibold rounded-2xl hover:bg-indigo-700 active:scale-[0.98] transition-all focus:outline-none shadow-md shadow-indigo-500/20 dark:shadow-none cursor-pointer select-none text-sm md:text-base"
+                  className="w-full relative outline-none overflow-hidden px-5 py-3.5 md:px-6 md:py-4 bg-indigo-600 text-white font-semibold rounded-2xl hover:bg-indigo-700 active:scale-[0.98] transition-all focus:outline-none shadow-md shadow-indigo-500/20 dark:shadow-none cursor-pointer select-none text-sm md:text-base"
                 >
                   {t.autoThemeBtn}
                 </button>
@@ -299,7 +312,7 @@ export default function App() {
               >
                 <button
                   onPointerDown={(e) => ripple.create(e as any, "light")}
-                  className="w-full relative overflow-hidden px-5 py-3.5 md:px-6 md:py-4 bg-white text-neutral-900 font-semibold rounded-2xl border border-neutral-200 hover:bg-neutral-50 active:scale-[0.98] transition-all focus:outline-none shadow-sm cursor-pointer select-none text-sm md:text-base"
+                  className="w-full relative outline-none overflow-hidden px-5 py-3.5 md:px-6 md:py-4 bg-white text-neutral-900 font-semibold rounded-2xl border border-neutral-200 hover:bg-neutral-50 active:scale-[0.98] transition-all focus:outline-none shadow-sm cursor-pointer select-none text-sm md:text-base"
                 >
                   {t.forcedLightBtn}
                 </button>
@@ -320,7 +333,7 @@ export default function App() {
               >
                 <button
                   onPointerDown={(e) => ripple.create(e as any, "dark")}
-                  className="w-full relative overflow-hidden px-5 py-3.5 md:px-6 md:py-4 bg-neutral-900 text-white font-semibold rounded-2xl hover:bg-black active:scale-[0.98] transition-all focus:outline-none shadow-lg cursor-pointer select-none text-sm md:text-base"
+                  className="w-full relative outline-none overflow-hidden px-5 py-3.5 md:px-6 md:py-4 bg-neutral-900 text-white font-semibold rounded-2xl hover:bg-black active:scale-[0.98] transition-all focus:outline-none shadow-lg cursor-pointer select-none text-sm md:text-base"
                 >
                   {t.forcedDarkBtn}
                 </button>
@@ -343,7 +356,7 @@ export default function App() {
                   onPointerDown={(e) =>
                     ripple.create(e as any, { color: "#10b981", alpha: 0.35 })
                   }
-                  className="w-full relative overflow-hidden px-5 py-3.5 md:px-6 md:py-4 bg-emerald-500 text-white font-semibold rounded-2xl hover:bg-emerald-600 active:scale-[0.98] transition-all focus:outline-none shadow-md shadow-emerald-500/20 dark:shadow-none cursor-pointer select-none text-sm md:text-base"
+                  className="w-full relative outline-none overflow-hidden px-5 py-3.5 md:px-6 md:py-4 bg-emerald-500 text-white font-semibold rounded-2xl hover:bg-emerald-600 active:scale-[0.98] transition-all focus:outline-none shadow-md shadow-emerald-500/20 dark:shadow-none cursor-pointer select-none text-sm md:text-base"
                 >
                   {t.customColorBtn}
                 </button>
@@ -364,9 +377,9 @@ export default function App() {
                       key={idx}
                       onPointerDown={(e) => ripple.create(e as any)}
                       onClick={() => scrollToSection(sec.id)}
-                      className={`relative overflow-hidden text-left px-4 py-2.5 text-sm transition-all focus:outline-none cursor-pointer border-l-2 -ml-[1px] ${isActive
-                          ? "border-indigo-500 text-indigo-600 dark:text-indigo-400 font-semibold bg-indigo-50/50 dark:bg-indigo-500/10"
-                          : "border-transparent text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-900/50"
+                      className={`relative outline-none overflow-hidden text-left px-4 py-2.5 text-sm transition-all focus:outline-none cursor-pointer border-l-2 -ml-[1px] ${isActive
+                        ? "border-indigo-500 text-indigo-600 dark:text-indigo-400 font-semibold bg-indigo-50/50 dark:bg-indigo-500/10"
+                        : "border-transparent text-neutral-500 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-900/50"
                         }`}
                     >
                       {sec.title}
@@ -452,7 +465,7 @@ export default function App() {
             <p className="hidden md:block text-neutral-300 dark:text-neutral-700">
               •
             </p>
-            <p>{t.webVersion}: 2.9.5</p>
+            <p>{t.webVersion} 1.0.0</p>
           </div>
         </div>
       </footer>

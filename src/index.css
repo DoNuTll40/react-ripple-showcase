@@ -10,7 +10,12 @@
 body {
   /* ถ้าเป็นอังกฤษ จะใช้ Google Sans ก่อน... ถ้าเป็นไทยจะเด้งไปหา Noto Sans Thai อัตโนมัติ */
   font-family: "Google Sans", "Noto Sans Thai", sans-serif;
-  @apply antialiased; /* แอบเติมอันนี้ให้ครับ ช่วยให้ฟอนต์ดูเนียนและคมชัดขึ้นบนหน้าจอ */
+  @apply antialiased bg-white dark:bg-[#111113];
+}
+
+/* 📌 ปิดกรอบสีเทาๆ เวลาเอานิ้วจิ้มจอ (Tap Highlight) ในมือถือ/Chrome DevTools Mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Custom Scrollbar for a premium look */
@@ -20,7 +25,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  @apply bg-transparent;
 }
 
 ::-webkit-scrollbar-thumb {

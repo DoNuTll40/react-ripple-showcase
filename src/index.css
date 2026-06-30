@@ -1,0 +1,14 @@
+/* นำเข้า Google Sans สำหรับภาษาอังกฤษ */
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap");
+/* นำเข้า Noto Sans Thai สำหรับภาษาไทยให้เข้าคู่กัน */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  /* ถ้าเป็นอังกฤษ จะใช้ Google Sans ก่อน... ถ้าเป็นไทยจะเด้งไปหา Noto Sans Thai อัตโนมัติ */
+  font-family: "Google Sans", "Noto Sans Thai", sans-serif;
+  @apply antialiased; /* แอบเติมอันนี้ให้ครับ ช่วยให้ฟอนต์ดูเนียนและคมชัดขึ้นบนหน้าจอ */
+}

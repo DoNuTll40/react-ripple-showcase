@@ -1,5 +1,5 @@
 # 🌊 React Ripple Showcase
-*English | [ภาษาไทย](#-คุณสมบัติ)*
+*English | [ภาษาไทย](#-คุณสมบัติ-thai)*
 
 A beautiful, interactive showcase and documentation website for the [`@nuttawoot_donut/react-ripple`](https://www.npmjs.com/package/@nuttawoot_donut/react-ripple) library.
 เว็บไซต์สำหรับแสดงตัวอย่างการใช้งานและคู่มือ (Documentation) ของไลบรารี `@nuttawoot_donut/react-ripple` 

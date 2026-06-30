@@ -1,8 +1,12 @@
-# 🌊 React Ripple Showcase
-*English | [ภาษาไทย](#-คุณสมบัติ-thai)*
+<div align="center">
 
-A beautiful, interactive showcase and documentation website for the [`@nuttawoot_donut/react-ripple`](https://www.npmjs.com/package/@nuttawoot_donut/react-ripple) library. 
+# React Ripple Showcase
+*English | [ภาษาไทย](#คุณสมบัติ-thai)*
+
+A beautiful, interactive showcase and documentation website for the [`@nuttawoot_donut/react-ripple`](https://www.npmjs.com/package/@nuttawoot_donut/react-ripple) library. <br/>
 เว็บไซต์สำหรับแสดงตัวอย่างการใช้งานและคู่มือ (Documentation) ของไลบรารี [`@nuttawoot_donut/react-ripple`](https://www.npmjs.com/package/@nuttawoot_donut/react-ripple) 
+
+<br/>
 
 ![Showcase Preview](https://img.shields.io/badge/UI-Framer_Motion-f472b6?style=for-the-badge)
 ![Tech Stack](https://img.shields.io/badge/React-Vite_&_Tailwind-61dafb?style=for-the-badge)
@@ -10,11 +14,15 @@ A beautiful, interactive showcase and documentation website for the [`@nuttawoot
 ![NPM Version](https://img.shields.io/npm/v/@nuttawoot_donut/react-ripple?style=for-the-badge&logo=npm)
 ![License](https://img.shields.io/github/license/DoNuTll40/react-ripple-showcase?style=for-the-badge)
 
-**👀 Live Demo:** [https://react-ripple-showcase.vercel.app](https://react-ripple-showcase.vercel.app)
+<br/>
+
+**Live Demo:** [https://react-ripple-showcase.vercel.app](https://react-ripple-showcase.vercel.app)
+
+</div>
 
 ---
 
-## ✨ Features
+## Features
 
 This website is designed to provide the best possible developer experience when exploring the `react-ripple` library.
 
@@ -25,7 +33,7 @@ This website is designed to provide the best possible developer experience when 
 * **Fluid Animations**: Powered by **Framer Motion** for silky smooth page transitions, staggered reveals, and Apple-like segmented controls.
 * **Dark & Light Mode**: Seamless theme switching that also adapts the syntax highlighter theme automatically.
 
-## ✨ คุณสมบัติ (Thai)
+## คุณสมบัติ (Thai)
 
 เว็บไซต์นี้ถูกออกแบบมาเพื่อให้นักพัฒนาได้ทดลองเล่นและดูตัวอย่างการใช้งานไลบรารีได้ง่ายและสวยงามที่สุด
 
@@ -36,7 +44,7 @@ This website is designed to provide the best possible developer experience when 
 * **แอนิเมชันสุดสมูท**: จัดเต็มด้วย **Framer Motion** ทั้งการสลับหน้า, ปุ่ม Segmented Control ที่สไลด์ได้แบบแอปเปิล และ Staggered Reveal
 * **รองรับ Dark / Light Mode**: สลับธีมมืด/สว่างได้ลื่นไหล ซึ่งตัวสีของโค้ด (Syntax Highlighter) ก็จะเปลี่ยนตามไปด้วยแบบอัตโนมัติ
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Framework**: React + Vite
 * **Styling**: Tailwind CSS
@@ -45,7 +53,7 @@ This website is designed to provide the best possible developer experience when 
 * **Markdown Parsing**: React Markdown + Remark GFM
 * **Syntax Highlighting**: React Syntax Highlighter (Prism)
 
-## 🚀 Getting Started (วิธีรันโปรเจ็กต์)
+## Getting Started (วิธีรันโปรเจ็กต์)
 
 To run this showcase website locally / วิธีรันโปรเจ็กต์นี้ในเครื่อง:
 
@@ -65,7 +73,7 @@ To run this showcase website locally / วิธีรันโปรเจ็�
     npm run dev
     ```
 
-## 📦 About the Core Library (ไลบรารีหลัก)
+## About the Core Library (ไลบรารีหลัก)
 
 Looking for the actual Ripple library? Check out the main repository or the NPM package:
 หากต้องการดูโค้ดของตัวไลบรารีหลัก หรือดาวน์โหลดผ่าน NPM สามารถดูได้ที่ลิงก์ด้านล่างครับ:
@@ -73,12 +81,12 @@ Looking for the actual Ripple library? Check out the main repository or the NPM 
 * [GitHub Repository](https://github.com/DoNuTll40/ripple-effects-auto-darklight)
 * [NPM Package](https://www.npmjs.com/package/@nuttawoot_donut/react-ripple)
 
-## 🤝 Contributing
+## Contributing
 
 Contributions, issues, and feature requests are welcome!
 Feel free to check out the [issues page](https://github.com/DoNuTll40/react-ripple-showcase/issues) if you want to contribute.
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 

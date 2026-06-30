@@ -1,7 +1,7 @@
 <div align="center">
 
 # React Ripple Showcase
-*English | [ภาษาไทย](#คุณสมบัติ-thai)*
+*[English](#features) | [ภาษาไทย](#คุณสมบัติ-thai)*
 
 A beautiful, interactive showcase and documentation website for the [`@nuttawoot_donut/react-ripple`](https://www.npmjs.com/package/@nuttawoot_donut/react-ripple) library. <br/>
 เว็บไซต์สำหรับแสดงตัวอย่างการใช้งานและคู่มือ (Documentation) ของไลบรารี [`@nuttawoot_donut/react-ripple`](https://www.npmjs.com/package/@nuttawoot_donut/react-ripple) 
@@ -12,7 +12,16 @@ A beautiful, interactive showcase and documentation website for the [`@nuttawoot
 ![Tech Stack](https://img.shields.io/badge/React-Vite_&_Tailwind-61dafb?style=for-the-badge)
 ![Deployed on Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
 ![NPM Version](https://img.shields.io/npm/v/@nuttawoot_donut/react-ripple?style=for-the-badge&logo=npm)
+![NPM Downloads](https://img.shields.io/npm/dt/@nuttawoot_donut/react-ripple?style=for-the-badge)
 ![License](https://img.shields.io/github/license/DoNuTll40/react-ripple-showcase?style=for-the-badge)
+
+<br/>
+
+![GitHub Repo stars](https://img.shields.io/github/stars/DoNuTll40/react-ripple-showcase?style=for-the-badge)
+![GitHub forks](https://img.shields.io/github/forks/DoNuTll40/react-ripple-showcase?style=for-the-badge)
+![GitHub last commit](https://img.shields.io/github/last-commit/DoNuTll40/react-ripple-showcase?style=for-the-badge)
+![GitHub repo size](https://img.shields.io/github/repo-size/DoNuTll40/react-ripple-showcase?style=for-the-badge)
+![Visitors](https://komarev.com/ghpvc/?username=DoNuTll40-react-ripple-showcase&style=for-the-badge&color=blue)
 
 <br/>
 
@@ -86,9 +95,23 @@ Looking for the actual Ripple library? Check out the main repository or the NPM 
 Contributions, issues, and feature requests are welcome!
 Feel free to check out the [issues page](https://github.com/DoNuTll40/react-ripple-showcase/issues) if you want to contribute.
 
+<a href="https://github.com/DoNuTll40/react-ripple-showcase/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=DoNuTll40/react-ripple-showcase" />
+</a>
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-*Designed & Built by [@nuttawoot_donut](https://github.com/DoNuTll40)*
+
+<div align="center">
+  <i>Designed & Built by <a href="https://github.com/DoNuTll40">@nuttawoot_donut</a></i>
+  <br/><br/>
+  <a href="https://github.com/DoNuTll40" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub-Follow-black?style=for-the-badge&logo=github" alt="Follow on GitHub">
+  </a>
+  <a href="#react-ripple-showcase">
+    <img src="https://img.shields.io/badge/Back_to_Top-⬆-lightgrey?style=for-the-badge" alt="Back to top">
+  </a>
+</div>

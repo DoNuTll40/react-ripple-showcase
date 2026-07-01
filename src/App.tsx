@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { Sun, Moon, Package, Check } from "lucide-react";
+import { Sun, Moon, Package, Check, Heart } from "lucide-react";
 import { translations } from "./locales/translations";
 import { generateId } from "./utils/stringUtils";
 import { useRipple } from "./hooks/useRipple";
@@ -230,6 +230,7 @@ export default function App() {
               href="https://github.com/DoNuTll40/ripple-effects-auto-darklight"
               target="_blank"
               rel="noreferrer"
+              draggable={false}
               onPointerDown={(e) => ripple.create(e as any)}
               className="relative overflow-hidden hidden sm:flex w-9 h-9 items-center justify-center rounded-full text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors focus:outline-none cursor-pointer"
             >
@@ -461,6 +462,7 @@ export default function App() {
               href="https://github.com/DoNuTll40/ripple-effects-auto-darklight"
               target="_blank"
               rel="noreferrer"
+              draggable={false}
               className="flex items-center gap-1.5 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             >
               <GithubSVG /> GitHub Repository
@@ -469,6 +471,7 @@ export default function App() {
               href="https://www.npmjs.com/package/@nuttawoot_donut/react-ripple"
               target="_blank"
               rel="noreferrer"
+              draggable={false}
               className="flex items-center gap-1.5 hover:text-red-500 transition-colors"
             >
               <Package size={16} /> NPM Package
@@ -477,6 +480,7 @@ export default function App() {
               href="https://github.com/DoNuTll40/ripple-effects-auto-darklight/issues"
               target="_blank"
               rel="noreferrer"
+              draggable={false}
               className="flex items-center gap-1.5 hover:text-neutral-900 dark:hover:text-white transition-colors"
             >
               Bug Report & Issues
@@ -497,6 +501,7 @@ export default function App() {
                 href="https://github.com/DoNuTll40"
                 target="_blank"
                 rel="noreferrer"
+                draggable={false}
                 className="font-semibold text-neutral-900 dark:text-white hover:underline transition-all"
               >
                 @nuttawoot_donut
@@ -506,6 +511,22 @@ export default function App() {
               •
             </p>
             <p>{t.webVersion} 1.0.0</p>
+          </div>
+
+          <div className="flex items-center justify-center text-[11px] md:text-xs text-neutral-400 dark:text-neutral-500 bg-neutral-100 dark:bg-neutral-900/60 px-4 py-1.5 rounded-full border border-neutral-200/60 dark:border-neutral-800/60 shadow-sm">
+            <span className="flex items-center gap-1.5 flex-wrap justify-center text-center">
+              <Heart size={13} className="text-red-500 fill-red-500 flex-shrink-0" />
+              Core library adapted from{" "}
+              <a
+                href="https://github.com/sajadevo/material-ripple-effects"
+                target="_blank"
+                rel="noreferrer"
+                draggable={false}
+                className="font-semibold text-neutral-700 dark:text-neutral-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors underline underline-offset-2 decoration-neutral-300 dark:decoration-neutral-700"
+              >
+                sajadevo/material-ripple-effects
+              </a>
+            </span>
           </div>
         </div>
       </footer>

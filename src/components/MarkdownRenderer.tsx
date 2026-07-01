@@ -60,6 +60,7 @@ export const MarkdownRenderer = ({
           <a
             className="text-indigo-500 hover:underline font-medium"
             target="_blank"
+            draggable={false}
             {...props}
           />
         ),

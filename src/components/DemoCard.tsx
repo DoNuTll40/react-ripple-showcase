@@ -50,8 +50,6 @@ export const DemoCard = ({
   // State สำหรับเก็บว่าตอนนี้กำลังดูโค้ดของ Framework อะไรอยู่
   const [activeTab, setActiveTab] = useState<keyof CodeSnippets>("react");
 
-  console.log(TABS.find(tab => tab.id === activeTab)?.id)
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
